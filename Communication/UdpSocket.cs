@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using UnityEngine;
 
 namespace huqiang
 {
@@ -13,13 +14,13 @@ namespace huqiang
         Thread thread;
         EnvelopeBuffer envelope;
         IPEndPoint endPoint;
-        DataReaderManage drm;
         public bool Packaging = false;
         bool running;
         bool auto;
+        Queue<SocData> queue;
         public UdpSocket(int port, IPEndPoint remote, bool subThread = true, PackType type = PackType.All, int es = 262144)
         {
-            drm = new DataReaderManage(128);
+           
             endPoint = remote;
             //Links = new Linker[thread * 1024];
             soc = new UdpClient(port);
@@ -38,6 +39,7 @@ namespace huqiang
                 thread = new Thread(Run);
                 thread.Start();
             }
+            queue = new Queue<SocData>();
         }
     
         void Run()
@@ -69,7 +71,7 @@ namespace huqiang
                 }
             }
         }
-        void EnvelopeCallback(byte[] data,uint tag)
+        void EnvelopeCallback(byte[] data,byte tag)
         {
             if (auto)
             {
@@ -77,21 +79,28 @@ namespace huqiang
                     MainDispatch(data, tag, endPoint);
             }
             else
-                drm.PushData(data, tag, endPoint);
+            {
+                SocData soc = new SocData();
+                soc.data = data;
+                soc.tag = tag;
+                soc.obj = endPoint;
+                lock (queue)
+                    queue.Enqueue(soc);
+            }
         }
-        public Action<byte[], UInt32, IPEndPoint> MainDispatch;
+        public Action<byte[], byte, IPEndPoint> MainDispatch;
         public void Dispatch()
         {
-            if (drm != null)
+            if (queue != null)
             {
-                int c = drm.count;
+                int c = queue.Count;
+                SocData soc;
                 for (int i = 0; i < c; i++)
                 {
-                    var dat = drm.GetNextMetaData();
-                    if (dat.data == null)
-                        break;
+                    lock (queue)
+                        soc = queue.Dequeue();
                     if (MainDispatch != null)
-                        MainDispatch(dat.data, dat.Tag, dat.obj as IPEndPoint);
+                        MainDispatch(soc.data, soc.tag, soc.obj as IPEndPoint);
                 }
             }
         }

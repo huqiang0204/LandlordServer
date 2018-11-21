@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -34,6 +35,12 @@ namespace huqiang
         public UInt32 rcvLen;
         public byte[] buff;
     }
+    class SocData
+    {
+        public byte tag;
+        public byte[] data;
+        public object obj;
+    }
     public class TcpSocket
     {
         const int bufferSize = 262144;
@@ -41,8 +48,8 @@ namespace huqiang
         Thread thread;
         private Socket client = null;
         public bool isConnection { get { if (client == null) return false; return client.Connected; } }
-        public DataReaderManage drm;
         IPEndPoint iep;
+        Queue<SocData> queue;
         public TcpSocket(int bs = 262144,PackType type = PackType.All,int es = 262144)
         {
             buffer = new byte[bs];
@@ -52,6 +59,7 @@ namespace huqiang
                 envelope = new EnvelopeBuffer(es);
                 envelope.type = type;
             }
+            queue = new Queue<SocData>();
         }
         byte[] buffer;
         bool reConnect=false;
@@ -150,7 +158,12 @@ namespace huqiang
                         if (a_Dispatch != null)
                             a_Dispatch(tmp,0,null);
                     }else
-                    drm.PushData(tmp,0);
+                    {
+                        SocData soc = new SocData();
+                        soc.data = tmp;
+                        lock (queue)
+                            queue.Enqueue(soc);
+                    }
                 }
             }
             catch (Exception ex)
@@ -161,7 +174,7 @@ namespace huqiang
                 //    ConnectFaild(ex.StackTrace);
             }
         }
-        void EnvelopeCallback(byte[] data,uint tag)
+        void EnvelopeCallback(byte[] data,byte tag)
         {
             object obj = null;
             if(SelfAnalytical!=null)
@@ -176,9 +189,15 @@ namespace huqiang
             if (auto)
             {
                 if (a_Dispatch != null)
-                    a_Dispatch(data, tag,null);
+                    a_Dispatch(data, tag, null);
             }
-            else drm.PushData(data, tag, obj);
+            else {
+                SocData soc = new SocData();
+                soc.tag =tag;
+                soc.obj = obj;
+                lock (queue)
+                    queue.Enqueue(soc);
+            }
         }
         unsafe int GetLenth(byte[] buff, int index)
         {
@@ -195,16 +214,16 @@ namespace huqiang
         /// <param name="DispatchMessage"></param>
         /// <param name="autodispatch">true由socket本身的线程进行派发，false为手动派发，请使用update函数</param>
         /// <param name="buff_size">手动派发时，缓存消息的队列大小,默认最小为32</param>
-        public void SetDispatchMethod(Action<byte[], UInt32,object> DispatchMessage, bool autodispatch = true, int buff_size = 32)
+        public void SetDispatchMethod(Action<byte[], UInt32,object> DispatchMessage, bool autodispatch = true)
         {
             a_Dispatch = DispatchMessage;
             auto = autodispatch;
-            if (!auto)
-            {
-                if (buff_size < 16)
-                    buff_size = 16;
-                drm = new DataReaderManage(buff_size);
-            }
+            //if (!auto)
+            //{
+            //    if (buff_size < 16)
+            //        buff_size = 16;
+            //    //drm = new DataReaderManage(buff_size);
+            //}
         }
         public void ConnectServer(IPAddress ip, int _port)
         {
@@ -223,22 +242,22 @@ namespace huqiang
         /// <summary>
         /// 由子线程解析，请勿访问ui,如果为空则有
         /// </summary>
-        public Func<byte[], UInt32, object> SelfAnalytical;
+        public Func<byte[], byte, object> SelfAnalytical;
         /// <summary>
         /// 由其它线程进行消息派发，当异步线程终止时，开启线程
         /// </summary>
         public void Dispatch()
         {
-            if(drm!=null)
+            if(queue!=null)
             {
-                int c = drm.count;
+                int c = queue.Count;
+                SocData soc;
                 for (int i = 0; i < c; i++)
                 {
-                    var dat = drm.GetNextMetaData();
-                    if (dat.data == null)
-                        break;
+                    lock (queue)
+                        soc = queue.Dequeue();
                     if (a_Dispatch != null)
-                        a_Dispatch(dat.data, dat.Tag, dat.obj);
+                        a_Dispatch(soc.data, soc.tag, soc.obj);
                 }
             }
         }
@@ -287,55 +306,6 @@ namespace huqiang
             }
             iep = iPEnd;
             redic = true;
-        }
-    }
-    public class DataReaderManage
-    {
-        public struct Data
-        {
-            public UInt32 Tag;
-            public byte[] data;
-            public object obj;
-        }
-        Data[] ndr;
-        public int max { get; private set; }
-        public int count
-        {
-            get
-            {
-                int a = end - start;
-                if (a < 0)
-                    a += max;
-                return a;
-            }
-        }
-        int start = 0;
-        int end = 0;
-        public DataReaderManage(int count)
-        {
-            max = count;
-            ndr = new Data[count];
-        }
-        public void PushData(byte[] data,UInt32 Tag,object obj=null)
-        {
-            ndr[start].Tag =Tag;
-            ndr[start].data=data;
-            ndr[start].obj = obj;
-            start++;
-            if (start >= max)
-                start = 0;
-        }
-        public Data GetNextMetaData()
-        {
-            if (end != start)
-            {
-                var net = ndr[end];
-                end++;
-                if (end >= max)
-                    end = 0;
-                return net;
-            }
-            return new Data();
         }
     }
 }

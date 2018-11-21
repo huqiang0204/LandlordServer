@@ -21,7 +21,7 @@ namespace huqiang
         UdpClient soc;
         Thread thread;
         int remotePort;
-        DataReaderManage drm;
+        Queue<SocData> queue;
         public bool Packaging = true;
         bool running;
         bool auto;
@@ -34,8 +34,8 @@ namespace huqiang
         /// <param name="subThread"></param>
         public UdpServer(int port, int remote, bool subThread = true, PackType type = PackType.All)
         {
+            queue = new Queue<SocData>();
             packType = type;
-            drm = new DataReaderManage(4096);
             remotePort = remote;
             //udp服务器端口绑定
             soc = new UdpClient(port);
@@ -148,21 +148,29 @@ namespace huqiang
                     MainDispatch(data, tag, iP);
             }
             else
-                drm.PushData(data, tag, iP);
+            {
+                SocData soc = new SocData();
+                soc.data = data;
+                soc.tag = tag;
+                soc.obj = iP;
+                lock (queue)
+                    queue.Enqueue(soc);
+            }
+
         }
-        public Action<byte[], UInt32, UdpLink> MainDispatch;
+        public Action<byte[], byte, UdpLink> MainDispatch;
         public void Dispatch()
         {
-            if (drm != null)
+            if (queue != null)
             {
-                int c = drm.count;
+                int c = queue.Count;
+                SocData soc;
                 for (int i = 0; i < c; i++)
                 {
-                    var dat = drm.GetNextMetaData();
-                    if (dat.data == null)
-                        break;
+                    lock (queue)
+                        soc = queue.Dequeue();
                     if (MainDispatch != null)
-                        MainDispatch(dat.data, dat.Tag, dat.obj as UdpLink);
+                        MainDispatch(soc.data, soc.tag, soc.obj as UdpLink);
                 }
             }
             ClearUnusedLink();
