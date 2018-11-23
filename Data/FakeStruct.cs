@@ -28,6 +28,30 @@ namespace huqiang.Data
                 p++;
             }
         }
+        public unsafe void ReadFromStruct(void* tar, int start, int size)
+        {
+            Int32* t = (Int32*)tar;
+            Int32* p = (Int32*)ptr;
+            p += start;
+            for (int i = 0; i < size; i++)
+            {
+                *p = *t;
+                t++;
+                p++;
+            }
+        }
+        public unsafe void WitreToStruct(void* tar, int start, int size)
+        {
+            Int32* t = (Int32*)tar;
+            Int32* p = (Int32*)ptr ;
+            p += start;
+            for (int i = 0; i < size; i++)
+            {
+                *t = *p;
+                t++;
+                p++;
+            }
+        }
         IntPtr ptr;
         unsafe byte* ip;
         int msize;
