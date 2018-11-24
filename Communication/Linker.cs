@@ -6,6 +6,7 @@ using System.Text;
 using System.Net;
 using LandlordServer.DataControll;
 using LandlordServer.Table;
+using huqiang.Data;
 
 namespace LandlordServer
 {
@@ -126,6 +127,15 @@ namespace LandlordServer
                 //Console.WriteLine(ex.StackTrace);
                 envelope.Clear();
             }
+        }
+        public static void SendEmptyDataBuffer(Linker linker, int cmd, int type)
+        {
+            DataBuffer db = new DataBuffer();
+            var fake = new FakeStruct(db, Req.Length);
+            fake[Req.Cmd] = cmd;
+            fake[Req.Type] = type;
+            db.fakeStruct = fake;
+            linker.Send(AES.Instance.Encrypt(db.ToBytes()), EnvelopeType.AesDataBuffer);
         }
     }
 }

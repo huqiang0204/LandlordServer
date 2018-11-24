@@ -13,6 +13,7 @@ namespace LandlordServer
 {
     public class SocServer
     {
+        const int SingleCount=2048;
         Socket soc;
         /// <summary>
         /// 所有玩家的连接
@@ -41,7 +42,7 @@ namespace LandlordServer
             packType = type;
             IPAddress address = IPAddress.Parse(ip);
             UserTable.Initial();
-            Links = new Linker[thread * 1024];
+            Links = new Linker[thread * SingleCount];
             soc = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             //端点
             IPEndPoint point = new IPEndPoint(address, port);
@@ -110,7 +111,7 @@ namespace LandlordServer
             {
                 int a = DateTime.Now.Millisecond;
                 int s = os;
-                for (int i = 0; i < 1024; i++)
+                for (int i = 0; i < SingleCount; i++)
                 {
                     var c = Links[s];
                     if (c != null)
@@ -148,7 +149,7 @@ namespace LandlordServer
         }
         void Heartbeat()
         {
-            int max = threads.Length * 2048;
+            int max = threads.Length * SingleCount;
             for (int i = 0; i < max; i++)
             {
                 if (Links[i] != null)
