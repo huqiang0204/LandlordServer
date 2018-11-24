@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LandlordServer.Data
+namespace LandlordServer.DataControll
 {
    public class Configuration
     {

@@ -62,6 +62,10 @@ namespace huqiang.Data
         {
             get { return (IntPtr)((int)ptr + index * m_size); }
         }
+        public Int32 this[int index, int os]
+        {
+           get{return GetInt32(index, os); } set{ SetInt32(index, os, value); }
+        }
         public unsafe Int32 GetInt32(int index, int offset)
         {
             int o = (index * m_size + offset) * 4;

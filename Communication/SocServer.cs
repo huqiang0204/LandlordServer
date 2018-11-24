@@ -4,10 +4,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using FightingServer.Table;
 using huqiang;
 using huqiang.Data;
-using LandlordServer.Data;
+using LandlordServer.DataControll;
+using LandlordServer.Table;
 
 namespace LandlordServer
 {
@@ -92,9 +92,6 @@ namespace LandlordServer
                         {
                             Links[i] = CreateModle(client);
                             NewConnect(Links[i]);
-                            //建立连接,等待玩家发送id值确定
-                            //var conn= RoomManager.gameRoom.Join(Links[i]);
-                            //if(conn) StatisticsTcp();
                             break;
                         }
                     }
@@ -151,7 +148,7 @@ namespace LandlordServer
         }
         void Heartbeat()
         {
-            int max = threads.Length * 1024;
+            int max = threads.Length * 2048;
             for (int i = 0; i < max; i++)
             {
                 if (Links[i] != null)

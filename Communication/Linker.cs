@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
 using System.Net;
-using FightingServer.Table;
-using LandlordServer.Data;
+using LandlordServer.DataControll;
+using LandlordServer.Table;
 
 namespace LandlordServer
 {
@@ -117,7 +117,7 @@ namespace LandlordServer
                    for(int i=0;i<list.Count;i++)
                     {
                         var dat = list[i];
-                        Dispatch(dat.data,dat.tag);
+                        ServerDataControll.Dispatch(this, dat.data, dat.tag);
                     }
                 }
             }
@@ -126,10 +126,6 @@ namespace LandlordServer
                 //Console.WriteLine(ex.StackTrace);
                 envelope.Clear();
             }
-        }
-        void Dispatch(byte[] dat,byte tag)
-        {
-            ServerDataControll.Dispatch(this,dat,tag);
         }
     }
 }

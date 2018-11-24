@@ -4,14 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace LandlordServer.Data
+namespace LandlordServer.DataControll
 {
     public class Req
     {
         public const Int32 Cmd = 0;
         public const Int32 Type = 1;
-        public const Int32 Args = 2;
-        public const Int32 Length = 3;
+        public const Int32 Error = 2;
+        public const Int32 Args = 3;
+        public const Int32 Length = 4;
     }
     public class MessageType
     {

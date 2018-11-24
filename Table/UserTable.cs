@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FightingServer.Table
+namespace LandlordServer.Table
 {
     //用户信息
     public class UserInfo
@@ -13,6 +13,7 @@ namespace FightingServer.Table
         public long _LastLogin;//最后登录时间
         public bool _Online;//在线状态
         public long _LastExit;//最后退出时间
+        public int _index;
     }
     public class UserTable
     {
@@ -23,7 +24,7 @@ namespace FightingServer.Table
         static int StartId = 10000;
         public static void Initial()
         {
-            users = new UserInfo[4096];
+            users = new UserInfo[65536];
         }
         /// <summary>
         /// 创建一个用户,如果该设备已存在用户则返回该用户
@@ -50,23 +51,22 @@ namespace FightingServer.Table
             info._LastLogin = DateTime.Now.Ticks;
             info._Online = true;
             StartId++;
+            info._index = max;
             users[max] = info;
             max++;
             return info;
         }
-        /// <summary>
-        /// 根据房间id移除用户
-        /// </summary>
-        /// <param name="roomId"></param>
-        public static void RemoveUser(int  roomId)
+        public static void RemoveUserAt(int index)
         {
-            for (int i = 0; i < users.Length; i++)
-            {
-                if (users[i] != null&& users[i].RoomId == roomId)
-                    users[i] = null;
-            }
+            max--;
+            users[index] = users[max];
         }
-
+        public static void RemoveUser(UserInfo user)
+        {
+            if (user == null)
+                return;
+            RemoveUserAt(user._index);
+        }
 
         const long OverTime = 3600000000;//1*60*60*1000000
         /// <summary>
@@ -80,11 +80,15 @@ namespace FightingServer.Table
                 int i = max - 1;
                 for (; i >= 0; i--)
                 {
-                    if (users[i] == null)  continue;
+                    if (users[i] == null)
+                    {
+                        max--;
+                        users[i] = users[max];
+                        continue;
+                    }
                     if (!users[i]._Online)
                         if (now - users[i]._LastExit > OverTime)
                         {
-                            users[i] = null;
                             max--;
                             users[i] = users[max];
                         }

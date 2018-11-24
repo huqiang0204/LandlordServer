@@ -331,6 +331,19 @@ namespace huqiang
                     buf[i] = Packing(buf[i], tag);
             return buf;
         }
+        public static byte[][] Pack(byte[] dat, byte tag,PackType type)
+        {
+            switch (type)
+            {
+                case PackType.Part:
+                    return SubVolume(dat, tag);
+                case PackType.Total:
+                    return new byte[][] { Packing(dat, tag) };
+                case PackType.All:
+                    return PackBig(dat, tag);
+            }
+            return null;
+        }
     }
     public class EnvelopeData
     {
@@ -369,16 +382,7 @@ namespace huqiang
         }
         public byte[][] Pack(byte[] dat, byte tag)
         {
-            switch (type)
-            {
-                case PackType.Part:
-                    return EnvelopeEx.SubVolume(dat, tag);
-                case PackType.Total:
-                    return new byte[][] { EnvelopeEx.Packing(dat, tag) };
-                case PackType.All:
-                    return EnvelopeEx.PackBig(dat, tag);
-            }
-            return null;
+            return EnvelopeEx.Pack(dat,tag,type);
         }
         public List<EnvelopeData> Unpack(byte[] dat, int len)
         {
@@ -394,7 +398,7 @@ namespace huqiang
             }
             return null;
         }
-        List<EnvelopeData> OrganizeSubVolume(List<EnvelopePart> list,  int fs = 1444)
+         List<EnvelopeData> OrganizeSubVolume(List<EnvelopePart> list,  int fs = 1444)
         {
             if (list != null)
             {
