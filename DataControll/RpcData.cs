@@ -37,6 +37,8 @@ namespace LandlordServer.DataControll
         static void Login(Linker linker, DataBuffer buffer)
         {
             string uid = buffer.fakeStruct.GetData<string>(Req.Args);
+            if (uid == null)
+                return;
             var user = UserTable.AddNewUser(uid);
 
             DataBuffer db = new DataBuffer();

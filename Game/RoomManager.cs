@@ -57,7 +57,7 @@ namespace LandlordServer.Game
         {
             for (int i = 0; i < 4096; i++)
             {
-                if (rooms[i] == null)
+                if (rooms[i] != null)
                 {
                     rooms[i].Update();
                 }

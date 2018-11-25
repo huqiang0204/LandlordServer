@@ -193,6 +193,7 @@ namespace huqiang
             }
             else {
                 SocData soc = new SocData();
+                soc.data = data;
                 soc.tag =tag;
                 soc.obj = obj;
                 lock (queue)

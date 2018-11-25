@@ -46,8 +46,10 @@ namespace LandlordServer.DataControll
                         DefData.Dispatch(linker,buffer);
                         break;
                     case MessageType.Rpc:
+                        RpcData.Dispatch(linker,buffer);
                         break;
                     case MessageType.Query:
+                        QueryData.Dispatch(linker,buffer);
                         break;
                 }
             }
