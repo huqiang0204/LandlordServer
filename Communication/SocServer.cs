@@ -7,6 +7,7 @@ using System.Threading;
 using huqiang;
 using huqiang.Data;
 using LandlordServer.DataControll;
+using LandlordServer.Game;
 using LandlordServer.Table;
 
 namespace LandlordServer
@@ -163,6 +164,7 @@ namespace LandlordServer
                 }
             }
             UserTable.Update();
+            RoomManager.Update();
         }
         void NewConnect(Linker linker)
         {

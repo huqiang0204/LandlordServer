@@ -29,7 +29,8 @@ namespace LandlordServer.Game
         Random random;
         int[] poker;
         byte[] rtp;
-        public int[] CardsA, CardsB, CardsC, LordCrads;
+        public int[][] GamerCards;
+        public int[] LordCrads;
         public FightingLandlord()
         {
             random = new Random();
@@ -37,9 +38,9 @@ namespace LandlordServer.Game
             for (int i = 0; i < 54; i++)
                 poker[i] = i;
             rtp = new byte[54];
-            CardsA = new int[17];
-            CardsB = new int[17];
-            CardsC = new int[17];
+            GamerCards = new int[3][];
+            for (int i = 0; i < 3; i++)
+                GamerCards[i] = new int[17];
             LordCrads = new int[3];
         }
         /// <summary>
@@ -56,12 +57,15 @@ namespace LandlordServer.Game
                 poker[i] = poker[r];
                 poker[r] = c;
             }
-            for(int i=0;i<17;i++)
+            var x = GamerCards[0];
+            var y = GamerCards[1];
+            var z = GamerCards[2];
+            for (int i=0;i<17;i++)
             {
                 int index = i * 3;
-                CardsA[i] = poker[index];
-                CardsB[i] = poker[index+1];
-                CardsC[i] = poker[index+2];
+                x[i] = poker[index];
+                y[i] = poker[index+1];
+                z[i] = poker[index+2];
             }
             LordCrads[0] = poker[51];
             LordCrads[1] = poker[52];

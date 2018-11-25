@@ -10,5 +10,6 @@ namespace LandlordServer.Game
         public List<int> Cards;
         public Linker linker;
         public UserInfo userInfo;
+        public Int32 ready;
     }
 }

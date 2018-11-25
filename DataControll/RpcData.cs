@@ -15,6 +15,9 @@ namespace LandlordServer.DataControll
         public const Int32 JoinRoom = 2;
         public const Int32 ExitRoom = 3;
         public const Int32 RoomDetail = 4;
+        public const Int32 GamerReady = 5;
+        public const Int32 HairCards = 6;
+        public const Int32 CountDown = 7;
     }
     public class RpcData
     {

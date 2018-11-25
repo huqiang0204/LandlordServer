@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace LandlordServer.Game
 {
@@ -8,7 +9,6 @@ namespace LandlordServer.Game
     {
         static GameRoom[] rooms=new GameRoom[4096];
         static int max;
-        
         public static GameRoom CreateRoom()
         {
             for(int i=0;i<4096;i++)
@@ -52,6 +52,16 @@ namespace LandlordServer.Game
                 }
             }
             return list;
+        }
+        public static void Update()
+        {
+            for (int i = 0; i < 4096; i++)
+            {
+                if (rooms[i] == null)
+                {
+                    rooms[i].Update();
+                }
+            }
         }
     }
 }
