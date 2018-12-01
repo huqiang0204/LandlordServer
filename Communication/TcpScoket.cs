@@ -6,35 +6,6 @@ using System.Threading;
 
 namespace huqiang
 {
-    public class EnvelopeType 
-    {
-        public const byte Mate = 0;
-        public const byte AesMate = 1;
-        public const byte Json = 2;
-        public const byte AesJson = 3;
-        public const byte DataBuffer = 4;
-        public const byte AesDataBuffer = 5;
-        public const byte String = 6;
-        public const byte AesString = 7;
-    }
-    public struct EnvelopeHead
-    {
-        /// <summary>
-        /// 前三个自己为id，第四字节为tag <<=24
-        /// </summary>
-        public UInt32 Tag;
-        public UInt32 Lenth;
-        public UInt16 CurPart;
-        public UInt16 AllPart;
-        public UInt32 PartLen;
-    }
-    public struct EnvelopeItem
-    {
-        public EnvelopeHead head;
-        public Int32 part;
-        public UInt32 rcvLen;
-        public byte[] buff;
-    }
     class SocData
     {
         public byte tag;
@@ -113,6 +84,11 @@ namespace huqiang
             {
                 redic = false;
                 client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                if(localBind!=null)
+                {
+                    client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                    client.Bind(localBind);
+                }
                 client.ReceiveTimeout = 2000;
                 client.SendTimeout = 100;
                 client.Connect(iep);
@@ -126,6 +102,7 @@ namespace huqiang
             }
             catch (Exception ex)
             {
+                reConnect = true;
                 client.Close();
                 if (ConnectFaild != null)
                     ConnectFaild(ex.StackTrace);
@@ -208,14 +185,14 @@ namespace huqiang
             }
         }
         bool auto = true;
-        Action<byte[], UInt32,object> a_Dispatch;
+        Action<byte[], byte ,object> a_Dispatch;
         /// <summary>
         /// 设置消息派发函数
         /// </summary>
         /// <param name="DispatchMessage"></param>
         /// <param name="autodispatch">true由socket本身的线程进行派发，false为手动派发，请使用update函数</param>
         /// <param name="buff_size">手动派发时，缓存消息的队列大小,默认最小为32</param>
-        public void SetDispatchMethod(Action<byte[], UInt32,object> DispatchMessage, bool autodispatch = true)
+        public void SetDispatchMethod(Action<byte[], byte ,object> DispatchMessage, bool autodispatch = true)
         {
             a_Dispatch = DispatchMessage;
             auto = autodispatch;
@@ -226,14 +203,16 @@ namespace huqiang
             //    //drm = new DataReaderManage(buff_size);
             //}
         }
-        public void ConnectServer(IPAddress ip, int _port)
+        IPEndPoint localBind;
+        public void ConnectServer(IPEndPoint remote, IPEndPoint bind = null)
         {
             if (thread != null)
             {
                 return;
             }
+            localBind = bind;
             close = false;
-            iep = new IPEndPoint(ip, _port);
+            iep = remote;
             if (thread == null)
             {
                 thread = new Thread(Run);

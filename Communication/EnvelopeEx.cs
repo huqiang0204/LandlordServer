@@ -3,6 +3,35 @@ using System.Collections.Generic;
 
 namespace huqiang
 {
+    public class EnvelopeType
+    {
+        public const byte Mate = 0;
+        public const byte AesMate = 1;
+        public const byte Json = 2;
+        public const byte AesJson = 3;
+        public const byte DataBuffer = 4;
+        public const byte AesDataBuffer = 5;
+        public const byte String = 6;
+        public const byte AesString = 7;
+    }
+    public struct EnvelopeHead
+    {
+        /// <summary>
+        /// 前三个自己为id，第四字节为tag <<=24
+        /// </summary>
+        public UInt32 Tag;
+        public UInt32 Lenth;
+        public UInt16 CurPart;
+        public UInt16 AllPart;
+        public UInt32 PartLen;
+    }
+    public struct EnvelopeItem
+    {
+        public EnvelopeHead head;
+        public Int32 part;
+        public UInt32 rcvLen;
+        public byte[] buff;
+    }
     public enum PackType
     {
         None,
