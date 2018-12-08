@@ -52,6 +52,19 @@ namespace huqiang.Data
                 return DataType.FakeStringArray;
             return (DataType)(-1);
         }
+        static int GetArraySize(Array array)
+        {
+            int size = 1;
+            if (array is Int32[])
+                size = 4;
+            else if (array is float[])
+                size = 4;
+            else if (array is Double[])
+                size = 8;
+            else if (array is Int64[])
+                size = 8;
+            return size;
+        }
         public FakeStruct fakeStruct;
         static byte[] Zreo = new byte[4];
         struct ReferenceCount
@@ -269,29 +282,36 @@ namespace huqiang.Data
             }
             return null;
         }
-        public byte[] GetBytes(int index)
+        static byte[] GetBytes(object obj)
         {
-            var array = buff[index].obj as Array;
+            if (obj is byte[])
+                return obj as byte[];
+            var array = obj as Array;
             if (array != null)
             {
+                int size = GetArraySize(array);
                 int len = array.Length;
-                byte[] buf = new byte[len * buff[index].size];
+                byte[] buf = new byte[len * size];
                 var src = Marshal.UnsafeAddrOfPinnedArrayElement(array, 0);
                 Marshal.Copy(src, buf, 0, buf.Length);
                 return buf;
             }
             else
             {
-                var str = buff[index].obj as string;
+                var str = obj as string;
                 if (str == null)
                 {
-                    var to = buff[index].obj as ToBytes;
+                    var to = obj as ToBytes;
                     if (to != null)
                         return to.ToBytes();
                     return null;
                 }
                 return Encoding.UTF8.GetBytes(str);
             }
+        }
+        public byte[] GetBytes(int index)
+        {
+            return GetBytes(buff[index]);
         }
         public byte[] ToBytes()
         {
