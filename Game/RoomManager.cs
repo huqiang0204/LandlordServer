@@ -17,6 +17,7 @@ namespace LandlordServer.Game
                 {
                     var room = new GameRoom();
                     room.RoomId = 10000 + i;
+                    rooms[i] = room;
                     return room;
                 }
             }

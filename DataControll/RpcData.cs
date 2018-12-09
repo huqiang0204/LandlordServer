@@ -32,6 +32,9 @@ namespace LandlordServer.DataControll
                 case RpcCmd.CreateRoom:
                     CreateRoom(linker,data);
                     break;
+                case RpcCmd.ExitRoom:
+                    ExitRoom(linker, data);
+                    break;
             }
         }
         static void Login(Linker linker, DataBuffer buffer)
@@ -89,6 +92,19 @@ namespace LandlordServer.DataControll
                 return;
             }
             room.JoinRoom(linker);
+        }
+        static void ExitRoom(Linker linker, DataBuffer buffer)
+        {
+            var user = linker.userInfo;
+            if (user == null)
+            {
+                ErrorCode.SendErrorCode(linker, ErrorCode.NotLogin);
+                return;
+            }
+            int rid = user.RoomId;
+            var room = RoomManager.QueryRoom(rid);
+            if (room != null)
+                room.EixtRoom(linker);
         }
     }
 }

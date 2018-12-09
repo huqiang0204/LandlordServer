@@ -49,6 +49,7 @@ namespace LandlordServer.Game
                 var user = gamers[i].userInfo;
                 if(user==null)
                 {
+                    user =
                     gamers[i].userInfo = linker.userInfo;
                     gamers[i].linker = linker;
                     DataBuffer db = new DataBuffer();
@@ -65,6 +66,7 @@ namespace LandlordServer.Game
 
                     Broadcast(db);
                     GetRoomDetail(linker);
+                    user.RoomId = RoomId;
                     break;
                 }
             }
