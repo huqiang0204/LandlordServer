@@ -52,9 +52,9 @@ namespace LandlordServer
             {
                 soc.Bind(endPoint);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                Console.WriteLine(ex.StackTrace);
             }
             soc.Listen(0);
             Console.WriteLine("服务器启动" + ip.ToString() + ":" + port.ToString());
@@ -87,7 +87,6 @@ namespace LandlordServer
                 try
                 {
                     var client = soc.Accept();
-                    client.ReceiveTimeout = 1000;
                     for (int i = 0; i < Links.Length; i++)
                     {
                         if (Links[i] == null)
