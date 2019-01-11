@@ -114,16 +114,21 @@ namespace LandlordServer
                 {
                     len = Link.Receive(buff);
                     var list= envelope.Unpack(buff,len);
-                   for(int i=0;i<list.Count;i++)
+                    try
                     {
-                        var dat = list[i];
-                        ServerDataControll.Dispatch(this, dat.data, dat.tag);
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            var dat = list[i];
+                            ServerDataControll.Dispatch(this, dat.data, dat.tag);
+                        }
+                    }catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
                     }
                 }
             }
             catch (Exception ex)
             {
-                //Console.WriteLine(ex.StackTrace);
                 envelope.Clear();
             }
         }

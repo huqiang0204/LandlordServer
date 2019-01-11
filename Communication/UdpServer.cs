@@ -32,7 +32,7 @@ namespace huqiang
         /// <param name="port"></param>
         /// <param name="remote"></param>
         /// <param name="subThread"></param>
-        public UdpServer(int port, int remote, bool subThread = true, PackType type = PackType.All)
+        public UdpServer(int port, int remote, bool subThread = true, PackType type = PackType.Total)
         {
             queue = new Queue<SocData>();
             packType = type;
