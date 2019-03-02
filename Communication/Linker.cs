@@ -42,8 +42,6 @@ namespace LandlordServer
         //ip地址的int值
         public int ip;
         public int port;
-        //玩家选人顺序 (0为1p,1为2p)
-        public int seat;
         //玩家登录ip
         public IPAddress addr;
         public int Send(byte[] data,byte type = EnvelopeType.Mate)

@@ -1,5 +1,7 @@
 ﻿
 using huqiang;
+using huqiang.Data;
+using LandlordServer.DataControll;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -16,7 +18,13 @@ namespace LandlordServer
     {
         public User(Socket soc) : base(soc)
         {
-           
+            DataBuffer db = new DataBuffer();
+            FakeStruct fake = new FakeStruct(db, Req.Length);
+            fake[Req.Cmd] = DefCmd.Version;
+            fake[Req.Type] = MessageType.Def;
+            fake[Req.Args] = Configuration.version;
+            db.fakeStruct = fake;
+           Send(AES.Instance.Encrypt(db.ToBytes()), EnvelopeType.AesDataBuffer);
         }
 
         public override void Dispose()

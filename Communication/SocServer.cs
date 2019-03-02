@@ -5,10 +5,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using huqiang;
-using huqiang.Data;
-using LandlordServer.DataControll;
-using LandlordServer.Game;
-using LandlordServer.Table;
 
 namespace LandlordServer
 {
@@ -23,7 +19,7 @@ namespace LandlordServer
         /// <summary>
         /// 创建一个新的默认连接 参数socket
         /// </summary>
-        public Func<Socket, Linker> CreateModle = (s) => { return new User(s); };
+        public Func<Socket, Linker> CreateModle = (s) => { return new Linker(s); };
         /// <summary>
         /// 默认的派发消息
         /// </summary>
@@ -57,17 +53,21 @@ namespace LandlordServer
                 Console.WriteLine(ex.StackTrace);
             }
             soc.Listen(0);
-            Console.WriteLine("服务器启动" + ip.ToString() + ":" + port.ToString());
             Instance = this;
-            server = new Thread(AcceptClient);
-            server.Start();
             threads = new Thread[thread];
             for (int i = 0; i < thread; i++)
             {
                 threads[i] = new Thread(Run);
                 threads[i].Start(i);
             }
-            timer = new Timer((o) => { Heartbeat(); }, null, 1000, 1000);
+        }
+        public void Start()
+        {
+            if(server==null)
+            {
+                server = new Thread(AcceptClient);
+                server.Start();
+            }
         }
         Int32 id = 100000;
         byte[] nil = { 0 };
@@ -92,7 +92,6 @@ namespace LandlordServer
                         if (Links[i] == null)
                         {
                             Links[i] = CreateModle(client);
-                            NewConnect(Links[i]);
                             break;
                         }
                     }
@@ -147,7 +146,10 @@ namespace LandlordServer
                 }
             }
         }
-        void Heartbeat()
+        /// <summary>
+        /// 给用户发送心跳
+        /// </summary>
+        public void Heartbeat()
         {
             int max = threads.Length * SingleCount;
             for (int i = 0; i < max; i++)
@@ -162,18 +164,6 @@ namespace LandlordServer
                     }
                 }
             }
-            UserTable.Update();
-            RoomManager.Update();
-        }
-        void NewConnect(Linker linker)
-        {
-            DataBuffer db = new DataBuffer();
-            FakeStruct fake = new FakeStruct(db,Req.Length);
-            fake[Req.Cmd] = DefCmd.Version;
-            fake[Req.Type] = MessageType.Def;
-            fake[Req.Args] = Configuration.version;
-            db.fakeStruct = fake;
-            linker.Send(AES.Instance.Encrypt(db.ToBytes()),EnvelopeType.AesDataBuffer);
         }
     }
 }
