@@ -1,5 +1,6 @@
 ﻿using huqiang;
 using huqiang.Data;
+using LandlordServer.Table;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,7 +23,7 @@ namespace LandlordServer.DataControll
     }
     public class ServerDataControll
     {
-        public static void Dispatch(Linker linker,byte[] dat,byte tag)
+        public static void Dispatch(KcpUser linker,byte[] dat,byte tag)
         {
             switch (tag)
             {
@@ -34,7 +35,7 @@ namespace LandlordServer.DataControll
                     break;
             }
         }
-        static void DispatchDataBuffer(Linker linker, byte[] dat)
+        static void DispatchDataBuffer(KcpUser linker, byte[] dat)
         {
             var buffer = new DataBuffer(dat);
             var fake = buffer.fakeStruct;

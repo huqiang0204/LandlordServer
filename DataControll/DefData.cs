@@ -13,7 +13,7 @@ namespace LandlordServer.DataControll
     }
     public class DefData
     {
-        public static void Dispatch(Linker linker,DataBuffer data)
+        public static void Dispatch(KcpLink linker,DataBuffer data)
         {
             int cmd = data.fakeStruct[Req.Cmd];
             switch(cmd)
@@ -23,7 +23,7 @@ namespace LandlordServer.DataControll
                     break;
             }
         }
-        static void GetUpdateFile(Linker linker)
+        static void GetUpdateFile(KcpLink linker)
         {
             string Dlluri = OSSManager.GetDllUri();
             string UIuri= OSSManager.GetUIUri();

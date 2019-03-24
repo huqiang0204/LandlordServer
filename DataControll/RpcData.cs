@@ -21,7 +21,7 @@ namespace LandlordServer.DataControll
     }
     public class RpcData
     {
-        public static void Dispatch(Linker linker, DataBuffer data)
+        public static void Dispatch(KcpUser linker, DataBuffer data)
         {
             int cmd = data.fakeStruct[Req.Cmd];
             switch (cmd)
@@ -37,7 +37,7 @@ namespace LandlordServer.DataControll
                     break;
             }
         }
-        static void Login(Linker linker, DataBuffer buffer)
+        static void Login(KcpUser linker, DataBuffer buffer)
         {
             string uid = buffer.fakeStruct.GetData<string>(Req.Args);
             if (uid == null)
@@ -63,7 +63,7 @@ namespace LandlordServer.DataControll
                 }
             }
         }
-        static void CreateRoom(Linker linker,DataBuffer buffer)
+        static void CreateRoom(KcpUser linker,DataBuffer buffer)
         {
            var user = linker.userInfo;
            if(user==null)
@@ -93,7 +93,7 @@ namespace LandlordServer.DataControll
             }
             room.JoinRoom(linker);
         }
-        static void ExitRoom(Linker linker, DataBuffer buffer)
+        static void ExitRoom(KcpUser linker, DataBuffer buffer)
         {
             var user = linker.userInfo;
             if (user == null)

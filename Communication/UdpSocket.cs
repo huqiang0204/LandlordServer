@@ -11,7 +11,7 @@ namespace huqiang
     {
         UdpClient soc;
         Thread thread;
-        EnvelopeBuffer envelope;
+        TcpEnvelope envelope;
         IPEndPoint endPoint;
         public bool Packaging = false;
         bool running;
@@ -28,7 +28,7 @@ namespace huqiang
             if (type != PackType.None)
             {
                 Packaging = true;
-                envelope = new EnvelopeBuffer(es);
+                envelope = new TcpEnvelope(es);
                 envelope.type = type;
             }
             running = true;
@@ -56,7 +56,7 @@ namespace huqiang
                             for (int i = 0; i < dat.Count; i++)
                             {
                                 var item = dat[i];
-                                EnvelopeCallback(item.data, item.tag);
+                                EnvelopeCallback(item.data, item.type);
                             }
                         }
                     }

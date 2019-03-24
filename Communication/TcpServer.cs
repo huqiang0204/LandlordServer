@@ -4,41 +4,41 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using huqiang;
 
-namespace LandlordServer
+
+namespace huqiang
 {
-    public class SocServer
+    public class TcpServer
     {
         const int SingleCount=2048;
         Socket soc;
         /// <summary>
         /// 所有玩家的连接
         /// </summary>
-        Linker[] Links;
+        TcpLinker[] Links;
         /// <summary>
         /// 创建一个新的默认连接 参数socket
         /// </summary>
-        public Func<Socket, Linker> CreateModle = (s) => { return new Linker(s); };
+        public Func<Socket,PackType , TcpLinker> CreateModle = (s,p) => { return new TcpLinker(s,p); };
         /// <summary>
         /// 默认的派发消息
         /// </summary>
-        public Action<Linker, byte[]> DispatchMessage = (o, e) => { Console.WriteLine("new message"); };
+        public Action<TcpLinker, byte[]> DispatchMessage = (o, e) => { Console.WriteLine("new message"); };
         /// <summary>
         /// 单例服务器实例
         /// </summary>
-        public static SocServer Instance;
+        public static TcpServer Instance;
 
-        SocketAsyncEventArgs rs;
         Thread server;
         Thread[] threads;
-        Timer timer;
         PackType packType;
         IPEndPoint endPoint;
-        public SocServer(string ip, int port,PackType type = PackType.Part, int thread = 8)
+        int ThreadCount;
+        public TcpServer(string ip, int port,PackType type = PackType.All, int thread = 8)
         {
+            ThreadCount = thread;
             packType = type;
-            Links = new Linker[thread * SingleCount];
+            Links = new TcpLinker[thread * SingleCount];
             soc = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             soc.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             //端点
@@ -68,7 +68,23 @@ namespace LandlordServer
                 server = new Thread(AcceptClient);
                 server.Start();
             }
+            if(threadTimer==null)
+            {
+                threadTimer = new ThreadTimer();
+                threadTimer.Interal = 1000;
+                threadTimer.Tick = (o, e) => {
+                    try
+                    {
+                        Heartbeat();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                };
+            }
         }
+        ThreadTimer threadTimer;
         Int32 id = 100000;
         byte[] nil = { 0 };
         public void Dispose()
@@ -78,7 +94,8 @@ namespace LandlordServer
             server.Abort();
             for (int i = 0; i < threads.Length; i++)
                 threads[i].Abort();
-            timer.Dispose();
+            if (threadTimer != null)
+                threadTimer.Dispose();
         }
         void AcceptClient()
         {
@@ -91,7 +108,7 @@ namespace LandlordServer
                     {
                         if (Links[i] == null)
                         {
-                            Links[i] = CreateModle(client);
+                            Links[i] = CreateModle(client, packType);
                             break;
                         }
                     }
@@ -102,13 +119,13 @@ namespace LandlordServer
                 }
             }
         }
-
         void Run(object index)
         {
             int os = (int)index;
             while (true)
             {
-                int a = DateTime.Now.Millisecond;
+                var now = DateTime.Now;
+                long a = now.Ticks;
                 int s = os;
                 for (int i = 0; i < SingleCount; i++)
                 {
@@ -117,18 +134,13 @@ namespace LandlordServer
                     {
                         c.Recive();
                     }
-                    s += 8;
+                    s +=ThreadCount;
                 }
-                int t = DateTime.Now.Millisecond;
+                long t = DateTime.Now.Ticks;
                 t -= a;
-                if (t < 0)
-                    t += 1000;
-                t = 10 - t;
-                if (t < 0)
-                    t = 10;
-                else if (t > 10)
-                    t = 10;
-                Thread.Sleep(t);
+                t /= 10000;
+                if (t < 10)
+                    Thread.Sleep(10 - (int)t);
             }
         }
 
@@ -149,20 +161,34 @@ namespace LandlordServer
         /// <summary>
         /// 给用户发送心跳
         /// </summary>
-        public void Heartbeat()
+        void Heartbeat()
         {
             int max = threads.Length * SingleCount;
             for (int i = 0; i < max; i++)
             {
-                if (Links[i] != null)
+                var link = Links[i];
+                if (link != null)
                 {
-                    if (Links[i].Send(nil) < 0)
+                    if (link.Send(nil) < 0)
                     {
-                        Links[i].Dispose();
                         Links[i] = null;
-                        Console.WriteLine("user break");
+                        link.Dispose();
                     }
                 }
+            }
+        }
+        /// <summary>
+        /// 广播所有在线用户
+        /// </summary>
+        /// <param name="action"></param>
+        public void Broadcasting(Action<TcpLinker> action)
+        {
+            int max = threads.Length * SingleCount;
+            for (int i = 0; i < max; i++)
+            {
+                var link = Links[i];
+                if (link != null)
+                    action(link);
             }
         }
     }

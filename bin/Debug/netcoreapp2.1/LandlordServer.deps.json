@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.1",
+    "signature": "0c30cd7755a856da7715231ee7d64eb12318d1ca"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.1": {
+      "LandlordServer/1.0.0": {
+        "dependencies": {
+          "Aliyun.OSS.SDK.NetCore": "2.9.0"
+        },
+        "runtime": {
+          "LandlordServer.dll": {}
+        }
+      },
+      "Aliyun.OSS.SDK.NetCore/2.9.0": {
+        "runtime": {
+          "lib/netstandard2.0/Aliyun.OSS.Core.dll": {
+            "assemblyVersion": "2.9.0.0",
+            "fileVersion": "2.9.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "LandlordServer/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Aliyun.OSS.SDK.NetCore/2.9.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-QWbvE58rES/9tqZCrlu3RiSdvwbXudLmZUwTfWMQ+eNE/8qTYXs/GHcercl9E/fXZC6MtNVV3xqwPoiNHmZvDg==",
+      "path": "aliyun.oss.sdk.netcore/2.9.0",
+      "hashPath": "aliyun.oss.sdk.netcore.2.9.0.nupkg.sha512"
+    }
+  }
+}

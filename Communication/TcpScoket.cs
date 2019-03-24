@@ -15,7 +15,7 @@ namespace huqiang
     public class TcpSocket
     {
         const int bufferSize = 262144;
-        EnvelopeBuffer envelope;
+        TcpEnvelope envelope;
         Thread thread;
         private Socket client = null;
         public bool isConnection { get { if (client == null) return false; return client.Connected; } }
@@ -27,7 +27,7 @@ namespace huqiang
             if(type!=PackType.None)
             {
                 Packaging = true;
-                envelope = new EnvelopeBuffer(es);
+                envelope = new TcpEnvelope(es);
                 envelope.type = type;
             }
             queue = new Queue<SocData>();
@@ -121,7 +121,7 @@ namespace huqiang
                         for (int i = 0; i < dat.Count; i++)
                         {
                             var item = dat[i];
-                            EnvelopeCallback(item.data,item.tag);
+                            EnvelopeCallback(item.data,item.type);
                         }
                     }
                 }

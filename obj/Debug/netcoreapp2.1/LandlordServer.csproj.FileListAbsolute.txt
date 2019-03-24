@@ -1,0 +1,11 @@
+H:\SelfWork\LandlordServer\LandlordServer\bin\Debug\netcoreapp2.1\LandlordServer.deps.json
+H:\SelfWork\LandlordServer\LandlordServer\bin\Debug\netcoreapp2.1\LandlordServer.runtimeconfig.json
+H:\SelfWork\LandlordServer\LandlordServer\bin\Debug\netcoreapp2.1\LandlordServer.runtimeconfig.dev.json
+H:\SelfWork\LandlordServer\LandlordServer\bin\Debug\netcoreapp2.1\LandlordServer.dll
+H:\SelfWork\LandlordServer\LandlordServer\bin\Debug\netcoreapp2.1\LandlordServer.pdb
+H:\SelfWork\LandlordServer\LandlordServer\obj\Debug\netcoreapp2.1\LandlordServer.csprojAssemblyReference.cache
+H:\SelfWork\LandlordServer\LandlordServer\obj\Debug\netcoreapp2.1\LandlordServer.csproj.CoreCompileInputs.cache
+H:\SelfWork\LandlordServer\LandlordServer\obj\Debug\netcoreapp2.1\LandlordServer.AssemblyInfoInputs.cache
+H:\SelfWork\LandlordServer\LandlordServer\obj\Debug\netcoreapp2.1\LandlordServer.AssemblyInfo.cs
+H:\SelfWork\LandlordServer\LandlordServer\obj\Debug\netcoreapp2.1\LandlordServer.dll
+H:\SelfWork\LandlordServer\LandlordServer\obj\Debug\netcoreapp2.1\LandlordServer.pdb

@@ -1,5 +1,6 @@
 ﻿using huqiang;
 using huqiang.Data;
+using LandlordServer.Table;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace LandlordServer.DataControll
 {
     public class ErrorCode
     {
-        public static void SendErrorCode(Linker linker,Int32 error)
+        public static void SendErrorCode(KcpUser linker,Int32 error)
         {
             DataBuffer db = new DataBuffer();
             var fake = new FakeStruct(db, Req.Length);

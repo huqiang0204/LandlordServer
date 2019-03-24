@@ -6,14 +6,14 @@ using System.Threading;
 
 namespace huqiang
 {
-    public class UdpLink
+    public class TcpLink
     {
         public Int32 id;
         public Int32 ip;
         public Int32 port;
         public string uniId;
         public IPEndPoint endpPoint;
-        public EnvelopeBuffer envelope;
+        public TcpEnvelope envelope;
         public long time;
     }
     public class UdpServer
@@ -41,7 +41,7 @@ namespace huqiang
             soc = new UdpClient(port);
             running = true;
             auto = subThread;
-            links = new List<UdpLink>();
+            links = new List<TcpLink>();
             if (thread == null)
             {
                 //创建消息接收线程
@@ -51,44 +51,14 @@ namespace huqiang
         }
         public void Send(byte[] dat, IPEndPoint ip, byte tag)
         {
-            switch (packType)
-            {
-                case PackType.Part:
-                    var all = EnvelopeEx.SubVolume(dat, tag);
-                    for (int i = 0; i < all.Length; i++)
-                        soc.Send(all[i], all[i].Length, ip);
-                    break;
-                case PackType.Total:
-                    dat = EnvelopeEx.Packing(dat, tag);
-                    soc.Send(dat, dat.Length, ip);
-                    break;
-                case PackType.All:
-                    all = EnvelopeEx.PackBig(dat, tag);
-                    for (int i = 0; i < all.Length; i++)
-                        soc.Send(all[i], all[i].Length, ip);
-                    break;
-                default:
-                    soc.Send(dat, dat.Length, ip);
-                    break;
-            }
+            var all = EnvelopeEx.Pack(dat, tag, packType);
+            for (int i = 0; i < all.Length; i++)
+                soc.Send(all[i], all[i].Length, ip);
         }
         public void SendAll(byte[] dat, byte tag)
         {
-            switch (packType)
-            {
-                case PackType.Part:
-                    SendAll(EnvelopeEx.SubVolume(dat, tag));
-                    break;
-                case PackType.Total:
-                    SendAll(EnvelopeEx.Packing(dat, tag));
-                    break;
-                case PackType.All:
-                    SendAll(EnvelopeEx.PackBig(dat, tag));
-                    break;
-                default:
-                    SendAll(dat);
-                    break;
-            }
+            var all = EnvelopeEx.Pack(dat, tag, packType);
+            SendAll(all);
         }
         void SendAll(byte[][] dat)
         {
@@ -127,7 +97,7 @@ namespace huqiang
                         for (int i = 0; i < data.Count; i++)
                         {
                             var item = data[i];
-                            EnvelopeCallback(item.data, item.tag, env);
+                            EnvelopeCallback(item.data, item.type, env);
                         }
                     }
                     else
@@ -140,7 +110,7 @@ namespace huqiang
                 }
             }
         }
-        void EnvelopeCallback(byte[] data, byte tag, UdpLink iP)
+        void EnvelopeCallback(byte[] data, byte tag, TcpLink iP)
         {
             if (auto)
             {
@@ -158,7 +128,7 @@ namespace huqiang
             }
 
         }
-        public Action<byte[], byte, UdpLink> MainDispatch;
+        public Action<byte[], byte, TcpLink> MainDispatch;
         public void Dispatch()
         {
             if (queue != null)
@@ -170,7 +140,7 @@ namespace huqiang
                     lock (queue)
                         soc = queue.Dequeue();
                     if (MainDispatch != null)
-                        MainDispatch(soc.data, soc.tag, soc.obj as UdpLink);
+                        MainDispatch(soc.data, soc.tag, soc.obj as TcpLink);
                 }
             }
             ClearUnusedLink();
@@ -180,9 +150,9 @@ namespace huqiang
             soc.Close();
             running = false;
         }
-        public List<UdpLink> links;
+        public List<TcpLink> links;
         //设置用户的udp对象用于发送消息
-        UdpLink FindEnvelope(IPEndPoint ep)
+        TcpLink FindEnvelope(IPEndPoint ep)
         {
             var ip = ep.Address.GetAddressBytes();
             int id = 0;
@@ -202,11 +172,11 @@ namespace huqiang
                     }
                 }
             }
-            UdpLink link = new UdpLink();
+            TcpLink link = new TcpLink();
             link.ip = id;
             link.port = ep.Port;
             link.endpPoint = ep;
-            link.envelope = new EnvelopeBuffer();
+            link.envelope = new TcpEnvelope();
             link.envelope.type = packType;
             link.time = DateTime.Now.Ticks;
             links.Add(link);

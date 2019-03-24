@@ -3,28 +3,22 @@ using System;
 using System.Net.Sockets;
 using System.Text;
 using System.Net;
-using LandlordServer.DataControll;
-using LandlordServer.Table;
-using huqiang.Data;
 
-namespace LandlordServer
+namespace huqiang
 {
     /// <summary>
     /// 客户端连接
     /// </summary>
-    public class Linker
+    public class TcpLinker
     {
-        public UserInfo userInfo;
         //PlayerInfo playerInfo;
-        EnvelopeBuffer envelope;
+        TcpEnvelope envelope;
         internal Socket Link;
-        //获取机器唯一id
-        public String uniId;
         byte[] buff;
-        public Linker(Socket soc, PackType pack = PackType.Part, int buffsize = 4096)
+        public TcpLinker(Socket soc, PackType pack = PackType.All, int buffsize = 4096)
         {
             Link = soc;
-            envelope = new EnvelopeBuffer();
+            envelope = new TcpEnvelope();
             envelope.type = pack;
             var obj = soc.RemoteEndPoint.GetType().GetProperty("Address");
             addr = obj.GetValue(soc.RemoteEndPoint) as IPAddress;
@@ -37,9 +31,10 @@ namespace LandlordServer
             }
             buff = new byte[buffsize];
         }
-        //根据ip生成的一个值
-        //public int id;
-        //ip地址的int值
+        public void SetPackType(PackType pack)
+        {
+            envelope.type = pack;
+        }
         public int ip;
         public int port;
         //玩家登录ip
@@ -91,7 +86,7 @@ namespace LandlordServer
         {
             return Send(Encoding.UTF8.GetBytes(data));
         }
-        ~Linker()
+        ~TcpLinker()
         {
             if (Link != null)
                 lock (Link)
@@ -117,7 +112,7 @@ namespace LandlordServer
                         for (int i = 0; i < list.Count; i++)
                         {
                             var dat = list[i];
-                            ServerDataControll.Dispatch(this, dat.data, dat.tag);
+                            Dispatch(dat.data, dat.type);
                         }
                     }catch (Exception ex)
                     {
@@ -130,14 +125,8 @@ namespace LandlordServer
                 envelope.Clear();
             }
         }
-        public static void SendEmptyDataBuffer(Linker linker, int cmd, int type)
+        public virtual void Dispatch( byte[] dat, byte tag)
         {
-            DataBuffer db = new DataBuffer();
-            var fake = new FakeStruct(db, Req.Length);
-            fake[Req.Cmd] = cmd;
-            fake[Req.Type] = type;
-            db.fakeStruct = fake;
-            linker.Send(AES.Instance.Encrypt(db.ToBytes()), EnvelopeType.AesDataBuffer);
         }
     }
 }

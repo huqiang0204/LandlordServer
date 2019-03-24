@@ -1,6 +1,7 @@
 ﻿using huqiang;
 using huqiang.Data;
 using LandlordServer.Game;
+using LandlordServer.Table;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,7 +14,7 @@ namespace LandlordServer.DataControll
     }
     public class QueryData
     {
-        public static void Dispatch(Linker linker, DataBuffer data)
+        public static void Dispatch(KcpUser linker, DataBuffer data)
         {
             int cmd = data.fakeStruct[Req.Cmd];
             switch (cmd)
@@ -23,7 +24,7 @@ namespace LandlordServer.DataControll
                     break;
             }
         }
-        static void QueryRoom(Linker linker, DataBuffer buffer)
+        static void QueryRoom(KcpUser linker, DataBuffer buffer)
         {
             var list = RoomManager.QueryFreeRoom();
             if(list.Count==0)

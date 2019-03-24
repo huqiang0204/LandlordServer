@@ -1,6 +1,7 @@
 ﻿using huqiang;
 using huqiang.Data;
 using LandlordServer.DataControll;
+using LandlordServer.Table;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -40,7 +41,7 @@ namespace LandlordServer.Game
             }
             return false;
         }
-        public void JoinRoom(Linker linker)
+        public void JoinRoom(KcpUser linker)
         {
             if (linker.userInfo == null)
                 return;
@@ -71,7 +72,7 @@ namespace LandlordServer.Game
                 }
             }
         }
-        public void GetRoomDetail(Linker linker)
+        public void GetRoomDetail(KcpUser linker)
         {
             DataBuffer data = new DataBuffer();
             var fake = new FakeStruct(data, Req.Length);
@@ -93,7 +94,7 @@ namespace LandlordServer.Game
             data.fakeStruct = fake;
             linker.Send(AES.Instance.Encrypt(data.ToBytes()),EnvelopeType.AesDataBuffer);
         }
-        public void Reconnect(Linker linker)
+        public void Reconnect(KcpUser linker)
         {
             if (linker.userInfo == null)
                 return;
@@ -126,7 +127,7 @@ namespace LandlordServer.Game
                 }
             }
         }
-        public void EixtRoom(Linker linker)
+        public void EixtRoom(KcpUser linker)
         {
             if (linker.userInfo == null)
                 return;
@@ -141,7 +142,7 @@ namespace LandlordServer.Game
                     gamers[i].linker = null;
                     gamers[i].userInfo = null;
                     Number--;
-                    Linker.SendEmptyDataBuffer(linker,RpcCmd.ExitRoom,MessageType.Rpc);
+                    //Linker.SendEmptyDataBuffer(linker,RpcCmd.ExitRoom,MessageType.Rpc);
                 }
             }
         }
@@ -163,7 +164,7 @@ namespace LandlordServer.Game
                 }
             }
         }
-        public void Ready(Linker linker,Int32 value)
+        public void Ready(KcpUser linker,Int32 value)
         {
             if (RoomState > State_Unready)
                 return;

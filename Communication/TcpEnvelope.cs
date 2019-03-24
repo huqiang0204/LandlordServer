@@ -8,11 +8,11 @@ namespace huqiang
     {
         public EnvelopeHead head;
         public Int32 part;
-        public UInt32 rcvLen;
+        public Int32 rcvLen;
         public byte[] buff;
         public long time;
     }
-    public class EnvelopeBuffer
+    public class TcpEnvelope
     {
         public static void CopyToBuff(byte[] buff, byte[] src, int start, EnvelopeHead head, int FragmentSize)
         {
@@ -33,7 +33,7 @@ namespace huqiang
         /// 
         /// </summary>
         /// <param name="buffLen">256kb</param>
-        public EnvelopeBuffer(int buffLen = 262144)
+        public TcpEnvelope(int buffLen = 262144)
         {
             buffer = new byte[buffLen];
         }
@@ -49,9 +49,9 @@ namespace huqiang
                 case PackType.Part:
                     return OrganizeSubVolume(EnvelopeEx.UnpackPart(dat, len, buffer, ref remain));
                 case PackType.Total:
-                    return EnvelopeEx.Unpack(dat, len, buffer, ref remain);
+                    return EnvelopeEx.UnpackByte(dat, len, buffer, ref remain);
                 case PackType.All:
-                    var list = EnvelopeEx.Unpack(dat, len, buffer, ref remain);
+                    var list = EnvelopeEx.UnpackByte(dat, len, buffer, ref remain);
                     return OrganizeSubVolume(EnvelopeEx.EnvlopeDataToPart(list), 1444 / 8 * 7);
             }
             return null;
@@ -71,10 +71,10 @@ namespace huqiang
                         {
                             if (s < 0)
                             {
-                                if (pool[i].head.Tag == 0)
+                                if (pool[i].head.MsgID == 0)
                                     s = i;
                             }
-                            if (item.head.Tag == pool[i].head.Tag)
+                            if (item.head.MsgID == pool[i].head.MsgID)
                             {
                                 CopyToBuff(pool[i].buff, item.data, 0, item.head, fs);
                                 pool[i].part++;
@@ -83,8 +83,8 @@ namespace huqiang
                                 {
                                     EnvelopeData data = new EnvelopeData();
                                     data.data = pool[i].buff;
-                                    data.tag = (byte)(pool[i].head.Tag >> 24);
-                                    pool[i].head.Tag = 0;
+                                    data.type = (byte)(pool[i].head.Type);
+                                    pool[i].head.MsgID = 0;
                                     datas.Add(data);
                                 }
                                 goto label;
@@ -101,7 +101,7 @@ namespace huqiang
                     {
                         EnvelopeData data = new EnvelopeData();
                         data.data = item.data;
-                        data.tag = (byte)(item.head.Tag >> 24);
+                        data.type = (byte)(item.head.Type);
                         datas.Add(data);
                     }
                 label:;
@@ -115,9 +115,9 @@ namespace huqiang
             var now = DateTime.Now.Ticks;
             for (int i = 0; i < 128; i++)
             {
-                if (pool[i].head.Tag > 0)
+                if (pool[i].head.MsgID > 0)
                     if (now - pool[i].time > 20 * 1000000)//清除超时20秒的消息
-                        pool[i].head.Tag = 0;
+                        pool[i].head.MsgID = 0;
             }
         }
         public void Clear()
@@ -125,7 +125,7 @@ namespace huqiang
             remain = 0;
             for (int i = 0; i < 128; i++)
             {
-                pool[i].head.Tag = 0;
+                pool[i].head.MsgID= 0;
             }
         }
     }
