@@ -33,7 +33,7 @@
     "Aliyun.OSS.SDK.NetCore/2.9.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-QWbvE58rES/9tqZCrlu3RiSdvwbXudLmZUwTfWMQ+eNE/8qTYXs/GHcercl9E/fXZC6MtNVV3xqwPoiNHmZvDg==",
+      "sha512": "sha512-vlYBnl7pvUqROROGM+kh31VR0DQpS463Xq81MnXT4kQ8X9V0Q52X9uBdSp3KGWAvsqfOGVe1YrnIJnBTsGY8qw==",
       "path": "aliyun.oss.sdk.netcore/2.9.0",
       "hashPath": "aliyun.oss.sdk.netcore.2.9.0.nupkg.sha512"
     }

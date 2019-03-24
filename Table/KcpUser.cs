@@ -21,33 +21,16 @@ namespace LandlordServer.Table
         {
 
         }
-        public void Send(byte[] data, byte type = EnvelopeType.Mate)
-        {
-            try
-            {
-                var ss = envelope.Pack(data, type);
-                for (int i = 0; i < ss.Length; i++)
-                    Send(ss[i]);
-            }
-            catch 
-            {
-            }
-
-        }
         public void Send(byte[][] data)
         {
             try
             {
                 for (int i = 0; i < data.Length; i++)
-                    Send(data[i]);
+                    kcp.soc.Send(data[i],data[i].Length, endpPoint);
             }
             catch 
             {
             }
-        }
-        public void Send(string data)
-        {
-            Send(Encoding.UTF8.GetBytes(data));
         }
     }
 }

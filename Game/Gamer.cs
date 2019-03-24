@@ -8,7 +8,7 @@ namespace LandlordServer.Game
     public struct GamerInfo
     {
         public List<int> Cards;
-        public Linker linker;
+        public KcpUser linker;
         public UserInfo userInfo;
         public Int32 ready;
     }

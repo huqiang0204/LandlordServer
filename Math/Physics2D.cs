@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using UnityEngine;
 
 namespace huqiang
 {
@@ -159,7 +158,7 @@ namespace huqiang
         }
         public static bool CircleToCircle(Vector2 A, Vector2 B, float radiusA, float radiusB)
         {
-            return radiusA + radiusB > Mathf.Sqrt((A.x - B.x) * (A.x - B.x) + (A.y - B.y) * (A.y - B.y));
+            return radiusA + radiusB > MathF.Sqrt((A.x - B.x) * (A.x - B.x) + (A.y - B.y) * (A.y - B.y));
         }
         public static Vector2 RotatePoint2(ref Vector2 p, ref Vector2 location, float angle)//a=绝对角度 d=直径
         {
@@ -171,8 +170,8 @@ namespace huqiang
             a *= 0.0174533f;//change angle to radin
             float d = p.y;
             Vector2 temp = new Vector2();
-            temp.x = location.x - Mathf.Sin(a) * d;
-            temp.y = location.y + Mathf.Cos(a) * d;
+            temp.x = location.x - MathF.Sin(a) * d;
+            temp.y = location.y + MathF.Cos(a) * d;
             return temp;
         }
         public static Vector3 RotateVector3(Vector2 p, ref Vector3 location, float angle)//a=绝对角度 d=直径
@@ -226,8 +225,8 @@ namespace huqiang
             float angT2OX = angT1OX - (isClockwise ? 1 : -1) * rad;
             //点Temp2
             Vector4 Temp2 = new Vector4();
-            Temp2.x = r * Mathf.Cos(angT2OX) + A.x;
-            Temp2.y = r * Mathf.Sin(angT2OX) + A.y;
+            Temp2.x = r * MathF.Cos(angT2OX) + A.x;
+            Temp2.y = r * MathF.Sin(angT2OX) + A.y;
             //点Q
             return Temp2;
         }
@@ -248,8 +247,8 @@ namespace huqiang
                 float angT2OX = angT1OX - angle;
                 //点Temp2
 
-                P[i].x = P[i].z * Mathf.Cos(angT2OX) + origion.x;
-                P[i].y = P[i].z * Mathf.Sin(angT2OX) + origion.y;
+                P[i].x = P[i].z * MathF.Cos(angT2OX) + origion.x;
+                P[i].y = P[i].z * MathF.Sin(angT2OX) + origion.y;
                 //点Q
             }
             return P;
@@ -261,15 +260,15 @@ namespace huqiang
 
             //P在四个坐标轴上的情况：x正、x负、y正、y负
             if (y == 0 && x > 0) return 0;
-            if (y == 0 && x < 0) return Mathf.PI;
-            if (x == 0 && y > 0) return Mathf.PI / 2;
-            if (x == 0 && y < 0) return Mathf.PI / 2 * 3;
+            if (y == 0 && x < 0) return MathF.PI;
+            if (x == 0 && y > 0) return MathF.PI / 2;
+            if (x == 0 && y < 0) return MathF.PI / 2 * 3;
 
             //点在第一、二、三、四象限时的情况
-            if (x > 0 && y > 0) return Mathf.Atan(y / x);
-            if (x < 0 && y > 0) return Mathf.PI - Mathf.Atan(y / -x);
-            if (x < 0 && y < 0) return Mathf.PI + Mathf.Atan(-y / -x);
-            if (x > 0 && y < 0) return Mathf.PI * 2 - Mathf.Atan(-y / x);
+            if (x > 0 && y > 0) return MathF.Atan(y / x);
+            if (x < 0 && y > 0) return MathF.PI - MathF.Atan(y / -x);
+            if (x < 0 && y < 0) return MathF.PI + MathF.Atan(-y / -x);
+            if (x > 0 && y < 0) return MathF.PI * 2 - MathF.Atan(-y / x);
 
             return 0;
         }
@@ -820,7 +819,7 @@ namespace huqiang
             float vy1 = C.y - A.y;
             float vx2 = B.x - A.x;
             float vy2 = B.y - A.y;
-            float len = Mathf.Sqrt(vx2 * vx2 + vy2 * vy2);
+            float len = MathF.Sqrt(vx2 * vx2 + vy2 * vy2);
             vx2 /= len;
             vy2 /= len;
             float u = vx1 * vx2 + vy1 * vy2;

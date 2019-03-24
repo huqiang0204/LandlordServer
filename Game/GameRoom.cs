@@ -157,10 +157,10 @@ namespace LandlordServer.Game
                 var linker = gamers[i].linker;
                 if (linker != null)
                 {
-                    if (linker.Send(dat)<0)
-                    {
-                        gamers[i].linker = null;
-                    }
+                    //if (linker.Send(dat)<0)
+                    //{
+                    //    gamers[i].linker = null;
+                    //}
                 }
             }
         }
