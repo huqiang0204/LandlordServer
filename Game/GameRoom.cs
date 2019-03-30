@@ -151,7 +151,7 @@ namespace LandlordServer.Game
             if (gamers == null)
                 return;
             var buf = AES.Instance.Encrypt(data.ToBytes());
-            var dat = EnvelopeEx.Pack(buf,EnvelopeType.AesDataBuffer,PackType.Part);
+            var dat = Envelope.Pack(buf,EnvelopeType.AesDataBuffer,PackType.Part,10000,1472);
             for (int i=0;i<3;i++)
             {
                 var linker = gamers[i].linker;

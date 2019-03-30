@@ -11,7 +11,7 @@ namespace LandlordServer.Table
         public UserInfo userInfo;
         public KcpUser(KcpServer server) : base(server)
         {
-           
+            Console.WriteLine("new link");
         }
         public override void Dispatch(byte[] dat, byte tag)
         {

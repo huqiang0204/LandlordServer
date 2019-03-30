@@ -12,8 +12,6 @@ namespace huqiang
         public static int SingleCount = 2048;
         public static Func<KcpServer, KcpLink> CreateLink = (o) => { return new KcpLink(o); };
         public static KcpServer Instance;
-        Queue<SocData> queue;
-        Thread server;
         Thread[] threads;
         KcpLink[] links;
         int maxLink;
@@ -125,6 +123,7 @@ namespace huqiang
             link.envelope = new KcpEnvelope();
             link.time = DateTime.Now.Ticks;
             link.Index = min;
+            link._connect= true;
             links[min]=link;
             return link;
         }

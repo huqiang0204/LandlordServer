@@ -122,7 +122,7 @@ namespace huqiang
             }
             catch (Exception ex)
             {
-                envelope.Clear();
+              
             }
         }
         public virtual void Dispatch( byte[] dat, byte tag)

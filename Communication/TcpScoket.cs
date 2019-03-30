@@ -82,6 +82,8 @@ namespace huqiang
         {
             try
             {
+                if (Packaging)
+                    envelope.Clear();
                 redic = false;
                 client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 if(localBind!=null)
@@ -95,7 +97,6 @@ namespace huqiang
                 reConnect = false;
                 if (client.Connected)
                 {
-                    envelope.Clear();
                     if (Connected != null)
                         Connected();
                 }
@@ -145,8 +146,6 @@ namespace huqiang
             }
             catch (Exception ex)
             {
-                if (Packaging)
-                    envelope.Clear();
                 //if (ConnectFaild != null)
                 //    ConnectFaild(ex.StackTrace);
             }
