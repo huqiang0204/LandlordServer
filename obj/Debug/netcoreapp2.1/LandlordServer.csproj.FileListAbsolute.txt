@@ -22,3 +22,16 @@ F:\SelfWork\LandlordServer\LandlordServer\bin\Debug\netcoreapp2.1\LandlordServer
 F:\SelfWork\LandlordServer\LandlordServer\bin\Debug\netcoreapp2.1\LandlordServer.runtimeconfig.dev.json
 F:\SelfWork\LandlordServer\LandlordServer\bin\Debug\netcoreapp2.1\LandlordServer.dll
 F:\SelfWork\LandlordServer\LandlordServer\bin\Debug\netcoreapp2.1\LandlordServer.pdb
+F:\SelfWork\LandlordServer\obj\Debug\netcoreapp2.1\LandlordServer.Properties.Resources.resources
+F:\SelfWork\LandlordServer\obj\Debug\netcoreapp2.1\LandlordServer.csproj.GenerateResource.cache
+F:\SelfWork\LandlordServer\obj\Debug\netcoreapp2.1\LandlordServer.csproj.CoreCompileInputs.cache
+F:\SelfWork\LandlordServer\obj\Debug\netcoreapp2.1\LandlordServer.AssemblyInfoInputs.cache
+F:\SelfWork\LandlordServer\obj\Debug\netcoreapp2.1\LandlordServer.AssemblyInfo.cs
+F:\SelfWork\LandlordServer\obj\Debug\netcoreapp2.1\LandlordServer.dll
+F:\SelfWork\LandlordServer\obj\Debug\netcoreapp2.1\LandlordServer.pdb
+F:\SelfWork\LandlordServer\bin\Debug\netcoreapp2.1\LandlordServer.deps.json
+F:\SelfWork\LandlordServer\bin\Debug\netcoreapp2.1\LandlordServer.runtimeconfig.json
+F:\SelfWork\LandlordServer\bin\Debug\netcoreapp2.1\LandlordServer.runtimeconfig.dev.json
+F:\SelfWork\LandlordServer\bin\Debug\netcoreapp2.1\LandlordServer.dll
+F:\SelfWork\LandlordServer\bin\Debug\netcoreapp2.1\LandlordServer.pdb
+F:\SelfWork\LandlordServer\obj\Debug\netcoreapp2.1\LandlordServer.genruntimeconfig.cache

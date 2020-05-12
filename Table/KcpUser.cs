@@ -9,7 +9,7 @@ namespace LandlordServer.Table
     public class KcpUser:KcpLink
     {
         public UserInfo userInfo;
-        public KcpUser(KcpServer server) : base(server)
+        public KcpUser() 
         {
             Console.WriteLine("new link");
         }
@@ -19,18 +19,11 @@ namespace LandlordServer.Table
         }
         public override void Disconnect()
         {
-
+            kcp.RemoveLink(this);
         }
         public void Send(byte[][] data)
         {
-            try
-            {
-                for (int i = 0; i < data.Length; i++)
-                    kcp.soc.Send(data[i],data[i].Length, endpPoint);
-            }
-            catch 
-            {
-            }
+  
         }
     }
 }
