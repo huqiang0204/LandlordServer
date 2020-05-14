@@ -44,28 +44,7 @@ namespace LandlordServer.DataControll
                     break;
                 case "Account":
                     break;
-
             }
-            //var user = UserTable.AddNewUser(uid);
-
-            //DataBuffer db = new DataBuffer();
-            //var fake = new FakeStruct(db, Req.Length + 1);
-            //fake[Req.Cmd] = RpcCmd.Login;
-            //fake[Req.Type] = MessageType.Rpc;
-            //fake[Req.Args] = user.id;
-            //fake[Req.Length] = user.RoomId;
-            //db.fakeStruct = fake;
-            //linker.Send(AES.Instance.Encrypt(db.ToBytes()), EnvelopeType.AesDataBuffer);
-
-            //linker.userInfo = user;
-            //if (user.RoomId > 0)
-            //{
-            //    var room = RoomManager.QueryRoom(user.RoomId);
-            //    if (room != null)
-            //    {
-            //        room.Reconnect(linker);
-            //    }
-            //}
         }
         static void TouristsLogin(KcpUser user, Login login)
         {

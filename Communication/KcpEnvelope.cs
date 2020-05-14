@@ -79,9 +79,8 @@ namespace huqiang
                 for (; c >= 0; c--)
                 {
                     var item = dats[c];
-                    UInt16 tag = item.head.Type;
-                    byte type = item.type;
-                    if(type == EnvelopeType.Heart)//这是一个心跳包
+                    byte type = (byte)item.head.Type;
+                    if (type == EnvelopeType.Heart)//这是一个心跳包
                     {
                         dats.RemoveAt(c);
                     }
