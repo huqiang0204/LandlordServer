@@ -144,20 +144,24 @@ namespace SqlManager.Sql
             for (int i = 0; i < atts.Length; i++)
             {
                 var att = atts[i];
+              
                 if(att!=null)
                 {
-                    if (multi)
+                    if (att.FieldName != "id")
                     {
-                        str.Append(",");
-                        sv.Append(",");
+                        if (multi)
+                        {
+                            str.Append(",");
+                            sv.Append(",");
+                        }
+                        if (att.DbType >= MySqlDataType.CHAR)
+                            sv.Append("'" + att.Value + "'");
+                        else sv.Append(att.Value);
+                        str.Append('`');
+                        str.Append(att.FieldName);
+                        str.Append('`');
+                        multi = true;
                     }
-                    if (att.DbType >= MySqlDataType.CHAR)
-                        sv.Append("'" + att.Value + "'");
-                    else sv.Append(att.Value);
-                    str.Append('`');
-                    str.Append(att.FieldName);
-                    str.Append('`');
-                    multi = true;
                 }
             }
             str.Append(")");

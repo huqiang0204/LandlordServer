@@ -59,9 +59,9 @@ namespace LandlordServer.Game
                     fake[Req.Type] = MessageType.Rpc;
                 
                     FakeStruct gamerInfo = new FakeStruct(db,3);
-                    gamerInfo[0] = i;//seat
-                    gamerInfo[1] = user.id;//uid
-                    gamerInfo[2] = RoomId;//roomid
+                    //gamerInfo[0] = i;//seat
+                    //gamerInfo[1] = user.id;//uid
+                    //gamerInfo[2] = RoomId;//roomid
                     fake.SetData(Req.Args,gamerInfo);
                     db.fakeStruct = fake;
 
@@ -85,9 +85,9 @@ namespace LandlordServer.Game
                 var user = gamers[i].userInfo;
                 if(user!=null)
                 {
-                    gs[i, 0] = user.id;
-                    gs[i, 1] = 1000;//金币
-                    gs[i, 2] = gamers[i].ready;
+                    //gs[i, 0] = user.id;
+                    //gs[i, 1] = 1000;//金币
+                    //gs[i, 2] = gamers[i].ready;
                 }
             }
             fake.SetData(Req.Args,gs);
@@ -114,9 +114,9 @@ namespace LandlordServer.Game
                         fake[Req.Type] = MessageType.Rpc;
 
                         FakeStruct gamerInfo = new FakeStruct(db, 3);
-                        gamerInfo[0] = i;//seat
-                        gamerInfo[1] = user.id;//uid
-                        gamerInfo[2] = RoomId;//roomid
+                        //gamerInfo[0] = i;//seat
+                        //gamerInfo[1] = user.id;//uid
+                        //gamerInfo[2] = RoomId;//roomid
                         fake.SetData(Req.Args, gamerInfo);
                         db.fakeStruct = fake;
 
@@ -133,18 +133,18 @@ namespace LandlordServer.Game
                 return;
             if (RoomState >State_Unready)
                 return;
-            int uid = linker.userInfo.id;
-            for (int i = 0; i < 3; i++)
-            {
-                var gamer = gamers[i].userInfo;
-                if (gamer.id == uid)
-                {
-                    gamers[i].linker = null;
-                    gamers[i].userInfo = null;
-                    Number--;
-                    //Linker.SendEmptyDataBuffer(linker,RpcCmd.ExitRoom,MessageType.Rpc);
-                }
-            }
+            //int uid = linker.userInfo.id;
+            //for (int i = 0; i < 3; i++)
+            //{
+            //    var gamer = gamers[i].userInfo;
+            //    if (gamer.id == uid)
+            //    {
+            //        gamers[i].linker = null;
+            //        gamers[i].userInfo = null;
+            //        Number--;
+            //        //Linker.SendEmptyDataBuffer(linker,RpcCmd.ExitRoom,MessageType.Rpc);
+            //    }
+            //}
         }
         public void Broadcast(DataBuffer data)
         {
@@ -168,8 +168,8 @@ namespace LandlordServer.Game
         {
             if (RoomState > State_Unready)
                 return;
-            int uid = linker.userInfo.id;
-           for(int i=0;i<3;i++)
+            long uid = linker.userInfo.id;
+            for(int i=0;i<3;i++)
             {
                 var user = gamers[i].userInfo;
                 if(user!=null)
@@ -178,12 +178,12 @@ namespace LandlordServer.Game
                     {
                         gamers[i].ready = value;
                         DataBuffer db = new DataBuffer();
-                        var fake = new FakeStruct(db,Req.Length+1);
-                        fake[Req.Cmd]=RpcCmd.GamerReady;
-                        fake[Req.Type] = MessageType.Rpc;
-                        fake[Req.Args] = uid;
-                        fake[Req.Length] = value;
-                        db.fakeStruct = fake;
+                        //var fake = new FakeStruct(db,Req.Length+1);
+                        //fake[Req.Cmd]=RpcCmd.GamerReady;
+                        //fake[Req.Type] = MessageType.Rpc;
+                        //fake[Req.Args] = uid;
+                        //fake[Req.Length] = value;
+                        //db.fakeStruct = fake;
 
                         Broadcast(db);
                         break;

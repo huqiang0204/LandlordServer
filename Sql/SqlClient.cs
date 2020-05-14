@@ -1,5 +1,5 @@
-﻿using MySql.Data.MySqlClient;
-using SqlManager.Data;
+﻿using Data;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,9 +12,6 @@ namespace SqlManager.Sql
         public static SqlClient Instance { get { if (ins == null) ins = new SqlClient(); return ins; } }
         MySqlConnection conn;
         MySqlCommand cmd;
-        string ip1 = "192.168.0.113";
-
-        string ip2 = "39.105.46.193";//远程数据库的ip
 
         private SqlClient()
         {
@@ -28,7 +25,7 @@ namespace SqlManager.Sql
         void Connect()
         {
             string connStr = String.Format("server={0};user={1}; password={2}; charset='utf8';database=;pooling=false;SslMode=none",
-                LocalFile.myIP.sqlIP, LocalFile.myIP.sqlUser, LocalFile.myIP.sqlPass);
+                LocalFile.myIP.ip, LocalFile.myIP.user, LocalFile.myIP.pass);
 
             conn.ConnectionString = connStr;
             try
@@ -45,7 +42,7 @@ namespace SqlManager.Sql
         void ReConnect()
         {
             string connStr = String.Format("server={0};user={1}; password={2}; charset='utf8';database=;pooling=false;SslMode=none",
-                LocalFile.myIP.sqlIP, LocalFile.myIP.sqlUser, LocalFile.myIP.sqlPass);
+                LocalFile.myIP.ip, LocalFile.myIP.user, LocalFile.myIP.pass);
 
             conn.ConnectionString = connStr;
             try

@@ -531,7 +531,7 @@ namespace huqiang
                         dp[j] = dat[s];
                         s++;
                     }
-                    tmp[all -1] = PackInt(buf, ds + 14);
+                    tmp[all -1] = PackInt(buf, r + 14);
                 }
             }
             return tmp;

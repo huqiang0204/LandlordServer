@@ -26,9 +26,6 @@ namespace LandlordServer.DataControll
             int cmd = data.fakeStruct[Req.Cmd];
             switch (cmd)
             {
-                case RpcCmd.Login:
-                    Login(linker, data);
-                    break;
                 case RpcCmd.CreateRoom:
                     CreateRoom(linker,data);
                     break;
@@ -37,32 +34,7 @@ namespace LandlordServer.DataControll
                     break;
             }
         }
-        static void Login(KcpUser linker, DataBuffer buffer)
-        {
-            string uid = buffer.fakeStruct.GetData<string>(Req.Args);
-            if (uid == null)
-                return;
-            var user = UserTable.AddNewUser(uid);
-
-            DataBuffer db = new DataBuffer();
-            var fake = new FakeStruct(db,Req.Length+1);
-            fake[Req.Cmd] = RpcCmd.Login;
-            fake[Req.Type] = MessageType.Rpc;
-            fake[Req.Args] = user.id;
-            fake[Req.Length] = user.RoomId;
-            db.fakeStruct = fake;
-            linker.Send(AES.Instance.Encrypt(db.ToBytes()), EnvelopeType.AesDataBuffer);
-
-            linker.userInfo = user;
-            if(user.RoomId>0)
-            {
-                var room = RoomManager.QueryRoom(user.RoomId);
-                if(room!=null)
-                {
-                    room.Reconnect(linker);
-                }
-            }
-        }
+      
         static void CreateRoom(KcpUser linker,DataBuffer buffer)
         {
            var user = linker.userInfo;

@@ -1,5 +1,7 @@
-﻿using huqiang;
+﻿using Data;
+using huqiang;
 using LandlordServer.Table;
+using SqlManager.Sql;
 using System;
 
 namespace LandlordServer
@@ -8,7 +10,8 @@ namespace LandlordServer
     {
         static void Main(string[] args)
         {
-            UserTable.Initial();
+            LocalFile.loadConfig();
+            SqlControll.Initial();
             var kcp = new KcpServer<KcpUser>(8899);
             kcp.OpenHeart();
             kcp.Run();

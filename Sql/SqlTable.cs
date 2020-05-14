@@ -28,7 +28,7 @@ namespace SqlManager.Sql
                         }
                            
                 }
-                catch (Exception ex)
+                catch
                 {
                     //Console.WriteLine(ex.StackTrace);
                 }

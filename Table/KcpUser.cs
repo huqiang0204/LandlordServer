@@ -1,8 +1,10 @@
 ﻿using huqiang;
+using huqiang.Data;
 using LandlordServer.DataControll;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TinyJson;
 
 namespace LandlordServer.Table
 {
@@ -24,6 +26,21 @@ namespace LandlordServer.Table
         public void Send(byte[][] data)
         {
   
+        }
+        public void SendString(Int32 cmd, Int32 type, string obj)
+        {
+            DataBuffer db = new DataBuffer(4);
+            var fs = db.fakeStruct = new FakeStruct(db, Req.Length);
+            fs[Req.Cmd] = cmd;
+            fs[Req.Type] = type;
+            fs.SetData(Req.Args, obj);
+            var dat = db.ToBytes();
+            dat = AES.Instance.Encrypt(dat);
+            Send(dat, EnvelopeType.AesDataBuffer);
+        }
+        public void Login()
+        {
+            SendString(DefCmd.Login,MessageType.Def,JSONWriter.ToJson(userInfo));
         }
     }
 }
