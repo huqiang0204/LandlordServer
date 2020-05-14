@@ -111,12 +111,12 @@ namespace SqlManager.Sql
             cmd.CommandText = SqlCmd.CreateNewTable(atts,tableName);
             cmd.ExecuteNonQuery();
         }
-        public void ExecuteCmd(string cmdText)
+        public int ExecuteCmd(string cmdText)
         {
             if (conn.State == System.Data.ConnectionState.Closed | conn.State == System.Data.ConnectionState.Broken)//连接中断
                 ReConnect();
             cmd.CommandText = cmdText;
-            cmd.ExecuteNonQuery();
+            return cmd.ExecuteNonQuery();
         }
         public void ExecuteCmd(string cmdText,Action WaitDo)
         {

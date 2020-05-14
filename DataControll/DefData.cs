@@ -67,9 +67,22 @@ namespace LandlordServer.DataControll
                     info.LastLogin = DateTime.Now.Ticks;
                     var cmd =  SqlCmd.InsertNewRow(info,"userinfo");
                     user.userInfo = info;
-                    user.Login();
                     o.Close();
-                    SqlClient.Instance.ExecuteCmd(cmd);
+                    SqlClient.Instance.ExecuteCmd(cmd,()=> {
+                        var qid = SqlCmd.Query("userinfo", "deviceId", login.key,true, "id");
+                        SqlClient.Instance.ExecuteReader(qid,(e)=> {
+                            e.Read();
+                            try
+                            {
+                                long uid = e.GetInt64(0);
+                                user.userInfo.id = uid;
+                                user.Login();
+                            }
+                            catch
+                            {
+                            }
+                        });
+                    });
                 }
             });
         }

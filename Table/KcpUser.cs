@@ -1,6 +1,7 @@
 ﻿using huqiang;
 using huqiang.Data;
 using LandlordServer.DataControll;
+using SqlManager.Sql;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,6 +23,8 @@ namespace LandlordServer.Table
         public override void Disconnect()
         {
             kcp.RemoveLink(this);
+            var cmd = SqlCmd.UpdateRow(userInfo, userInfo.id, "userinfo");
+            SqlClient.Instance.ExecuteCmd(cmd);
         }
         public void Send(byte[][] data)
         {

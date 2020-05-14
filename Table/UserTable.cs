@@ -32,7 +32,8 @@ namespace LandlordServer.Table
         public long coins;
         [MSDBAttribute(DbType = MySqlDataType.BIGINT)]
         public long diamond;
-        
+        [MSDBAttribute(DbType = MySqlDataType.INT)]
+        public int level;
     }
     public class UserTable
     {
