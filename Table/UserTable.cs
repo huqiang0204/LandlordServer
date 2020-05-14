@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SqlManager.Sql;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,13 +8,31 @@ namespace LandlordServer.Table
     //用户信息
     public class UserInfo
     {
-        public int Id;//id
-        public string DeviceId;//设备id
+        [MSDBAttribute(DbType = MySqlDataType.BIGINT)]
+        public long id;//id
+        [MSDBAttribute(DbType = MySqlDataType.VARCHAR, len = 255)]
+        public string deviceId;//设备id
+        [MSDBAttribute(DbType = MySqlDataType.VARCHAR, len = 32)]
+        public string key;
+        [MSDBAttribute(DbType = MySqlDataType.VARCHAR, len = 32)]
+        public string pass;
+        [MSDBAttribute(DbType = MySqlDataType.VARCHAR, len = 32)]
+        public string name;
+        [MSDBAttribute(DbType = MySqlDataType.INT)]
+        public int sex;
+        [MSDBAttribute(DbType = MySqlDataType.VARCHAR, len = 255)]
+        public string roleid;//图片名称
+        [MSDBAttribute(DbType = MySqlDataType.INT)]
         public int RoomId;//房间id
-        public long _LastLogin;//最后登录时间
-        public bool _Online;//在线状态
-        public long _LastExit;//最后退出时间
-        public int _index;
+        [MSDBAttribute(DbType = MySqlDataType.BIGINT)]
+        public long LastLogin;//最后登录时间
+        [MSDBAttribute(DbType = MySqlDataType.BIGINT)]
+        public long LastExit;//最后退出时间
+        [MSDBAttribute(DbType = MySqlDataType.BIGINT)]
+        public long coins;
+        [MSDBAttribute(DbType = MySqlDataType.BIGINT)]
+        public long diamond;
+        
     }
     public class UserTable
     {
@@ -37,21 +56,21 @@ namespace LandlordServer.Table
             {
                 if(users[i]!=null)
                 {
-                    if(users[i].DeviceId==DeviceId)
+                    if(users[i].deviceId==DeviceId)
                     {
-                        users[i]._LastLogin = DateTime.Now.Ticks;
-                        users[i]._Online = true;
+                        users[i].LastLogin = DateTime.Now.Ticks;
+                        //users[i]._Online = true;
                         return users[i];
                     }
                 }
             }
             UserInfo info = new UserInfo();
-            info.Id = StartId;
-            info.DeviceId = DeviceId;
-            info._LastLogin = DateTime.Now.Ticks;
-            info._Online = true;
+            info.id = StartId;
+            info.deviceId = DeviceId;
+            info.LastLogin = DateTime.Now.Ticks;
+            //info._Online = true;
             StartId++;
-            info._index = max;
+            //info._index = max;
             users[max] = info;
             max++;
             return info;
@@ -65,7 +84,7 @@ namespace LandlordServer.Table
         {
             if (user == null)
                 return;
-            RemoveUserAt(user._index);
+            //RemoveUserAt(user._index);
         }
 
         const long OverTime = 3600000000;//1*60*60*1000000
@@ -86,12 +105,12 @@ namespace LandlordServer.Table
                         users[i] = users[max];
                         continue;
                     }
-                    if (!users[i]._Online)
-                        if (now - users[i]._LastExit > OverTime)
-                        {
-                            max--;
-                            users[i] = users[max];
-                        }
+                    //if (!users[i]._Online)
+                    //    if (now - users[i].LastExit > OverTime)
+                    //    {
+                    //        max--;
+                    //        users[i] = users[max];
+                    //    }
                 }
             }
         }

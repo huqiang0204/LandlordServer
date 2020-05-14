@@ -34,7 +34,7 @@ namespace LandlordServer.Game
             for(int i=0;i<3;i++)
             {
                 var gamer = gamers[i].userInfo;
-                if(gamer.Id==uid)
+                if(gamer.id==uid)
                 {
                     return true;
                 }
@@ -60,7 +60,7 @@ namespace LandlordServer.Game
                 
                     FakeStruct gamerInfo = new FakeStruct(db,3);
                     gamerInfo[0] = i;//seat
-                    gamerInfo[1] = user.Id;//uid
+                    gamerInfo[1] = user.id;//uid
                     gamerInfo[2] = RoomId;//roomid
                     fake.SetData(Req.Args,gamerInfo);
                     db.fakeStruct = fake;
@@ -85,7 +85,7 @@ namespace LandlordServer.Game
                 var user = gamers[i].userInfo;
                 if(user!=null)
                 {
-                    gs[i, 0] = user.Id;
+                    gs[i, 0] = user.id;
                     gs[i, 1] = 1000;//金币
                     gs[i, 2] = gamers[i].ready;
                 }
@@ -98,13 +98,13 @@ namespace LandlordServer.Game
         {
             if (linker.userInfo == null)
                 return;
-            var uid = linker.userInfo.Id;
+            var uid = linker.userInfo.id;
             for (int i = 0; i < 3; i++)
             {
                 var user = gamers[i].userInfo;
                 if (user == null)
                 {
-                    if (user.Id == uid)
+                    if (user.id == uid)
                     {
                         gamers[i].userInfo = linker.userInfo;
                         gamers[i].linker = linker;
@@ -115,7 +115,7 @@ namespace LandlordServer.Game
 
                         FakeStruct gamerInfo = new FakeStruct(db, 3);
                         gamerInfo[0] = i;//seat
-                        gamerInfo[1] = user.Id;//uid
+                        gamerInfo[1] = user.id;//uid
                         gamerInfo[2] = RoomId;//roomid
                         fake.SetData(Req.Args, gamerInfo);
                         db.fakeStruct = fake;
@@ -133,11 +133,11 @@ namespace LandlordServer.Game
                 return;
             if (RoomState >State_Unready)
                 return;
-            int uid = linker.userInfo.Id;
+            int uid = linker.userInfo.id;
             for (int i = 0; i < 3; i++)
             {
                 var gamer = gamers[i].userInfo;
-                if (gamer.Id == uid)
+                if (gamer.id == uid)
                 {
                     gamers[i].linker = null;
                     gamers[i].userInfo = null;
@@ -168,13 +168,13 @@ namespace LandlordServer.Game
         {
             if (RoomState > State_Unready)
                 return;
-            int uid = linker.userInfo.Id;
+            int uid = linker.userInfo.id;
            for(int i=0;i<3;i++)
             {
                 var user = gamers[i].userInfo;
                 if(user!=null)
                 {
-                    if(user.Id==uid)
+                    if(user.id==uid)
                     {
                         gamers[i].ready = value;
                         DataBuffer db = new DataBuffer();

@@ -48,7 +48,7 @@ namespace LandlordServer.DataControll
             var fake = new FakeStruct(db,Req.Length+1);
             fake[Req.Cmd] = RpcCmd.Login;
             fake[Req.Type] = MessageType.Rpc;
-            fake[Req.Args] = user.Id;
+            fake[Req.Args] = user.id;
             fake[Req.Length] = user.RoomId;
             db.fakeStruct = fake;
             linker.Send(AES.Instance.Encrypt(db.ToBytes()), EnvelopeType.AesDataBuffer);
