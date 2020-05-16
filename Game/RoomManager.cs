@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LandlordServer.Table;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -63,6 +64,14 @@ namespace LandlordServer.Game
                     rooms[i].Update();
                 }
             }
+        }
+        //public static void QuickMatch(KcpUser user)
+        //{
+
+        //}
+        public void FindRoom(int roomType,int roomID)
+        {
+
         }
     }
 }
